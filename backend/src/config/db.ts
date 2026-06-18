@@ -10,16 +10,4 @@ const sequelize = new Sequelize(DB_URL,{
     logging: false,
 });
 
-const connectDB = async() => {
-    try {
-        await sequelize.authenticate()
-        console.log("Database connection successful");
-        await sequelize.sync();
-        console.log("Database tables created");
-    } catch (err:any) {
-        console.log(err.message);
-        throw err;
-    }
-}
-export default connectDB;
-export {sequelize};
+export default sequelize;
