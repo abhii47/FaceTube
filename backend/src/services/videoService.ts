@@ -1,5 +1,5 @@
 import ApiError from "../utils/apiError.js";
-import { Video } from "../models/index.js";
+import { User, Video } from "../models/index.js";
 
 type UploadVideoPayload = {
     userId:number,
@@ -7,6 +7,10 @@ type UploadVideoPayload = {
     title:string,
     description?:string | null,
     thumbnail?:Express.Multer.File | null
+}
+type Pagination = {
+    page:number,
+    limit:number
 }
 
 const uploadVideo = async(payload:UploadVideoPayload) => {
@@ -27,6 +31,28 @@ const uploadVideo = async(payload:UploadVideoPayload) => {
 
 }
 
+const getAllVideos = async(payload:Pagination) => {
+    const {page,limit} = payload;
+    const {count,rows} = await Video.findAndCountAll({
+        limit,
+        offset:(page-1)*limit,
+        order:[['created_at','DESC']],
+        attributes:["video_id","user_id","title","video_url","thumbnail_url","view_count"],
+        include:{
+            model:User,
+            as:"uploader",
+            attributes:["username","avatar_url"],
+        },
+    });
+    return {
+        totalVideos:count,
+        totalPages:Math.ceil(count/limit),
+        currentPage:page,
+        videos:rows
+    };
+}
+
 export default {
-    uploadVideo
+    uploadVideo,
+    getAllVideos
 }
