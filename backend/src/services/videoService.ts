@@ -23,7 +23,7 @@ const uploadVideo = async(payload:UploadVideoPayload) => {
         description:description ?? null,
         thumbnail_url:thumbnailUrl
     });
-    return uploadedVideo;
+    return uploadedVideo.toJSON();
 
 }
 
