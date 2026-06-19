@@ -7,7 +7,7 @@ class User extends Model<InferAttributes<User, { omit: "created_at" }>, InferCre
     declare email:string;
     declare password:string;
     declare avatar_url:CreationOptional<string>;
-    declare refresh_token:CreationOptional<string>;
+    declare refresh_token:CreationOptional<string | null>;
     
     declare readonly created_at:CreationOptional<Date>;
 }

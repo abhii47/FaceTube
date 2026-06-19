@@ -15,6 +15,9 @@ type LoginUserPayload = {
 
 const registerUser = async (payload:RegUserPayload) => {
     const {username,email,password} = payload;
+    if(!username || !email || !password){
+        throw new ApiError(400,"All Fields Are Required");
+    }
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({
         username,
@@ -28,6 +31,9 @@ const registerUser = async (payload:RegUserPayload) => {
 
 const loginUser = async (payload:LoginUserPayload) => {
     const {email,password} = payload;
+    if(!email || !password){
+        throw new ApiError(400,"All Fields Are Required");
+    }
     const user = await User.findOne({where:{email}});
     if(!user){
         throw new ApiError(401,"Invalid Credentials");
@@ -73,8 +79,22 @@ const refreshAccessToken = async (refreshToken:string) => {
 
 }
 
+const logoutUser = async(userId:number) => {
+    if(!userId){
+        throw new ApiError(400,"User ID is required");
+    }
+    const user = await User.findByPk(userId);
+    if(user && user.refresh_token !== null){
+        user.refresh_token = null;
+        await user.save();
+        return "User Logged Out Successfully";
+    }
+    return "User Already Logged Out";
+}
+
 export default {
     registerUser,
     loginUser,
-    refreshAccessToken
+    refreshAccessToken,
+    logoutUser
 }
