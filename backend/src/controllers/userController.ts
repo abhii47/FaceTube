@@ -55,8 +55,24 @@ const refreshAccessTokenController = async(
     }
 }
 
+const logoutController = async(
+    req:Request,
+    res:Response,
+    next:NextFunction
+) => {
+    try {
+        const userId = req.user!.id;
+        const result = await userSerivce.logoutUser(userId);
+        res.clearCookie("refreshToken");
+        return apiResponse(res,200,result,null);
+    } catch (err:any) {
+        next(err);
+    }
+}
+
 export default {
     registerController,
     loginController,
-    refreshAccessTokenController
+    refreshAccessTokenController,
+    logoutController
 }

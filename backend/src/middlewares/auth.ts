@@ -1,15 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import ApiError from "../utils/apiError.js";
 import { verifyAccessToken } from "../utils/token.js";
-import { JwtPayload } from "jsonwebtoken";
-
-
-interface RequestWithUser extends Request {
-    user?: JwtPayload;
-}
 
 export const auth = async(
-    req:RequestWithUser,
+    req:Request,
     res:Response,
     next:NextFunction
 ) => {
@@ -22,7 +16,7 @@ export const auth = async(
         if(!token){
             throw new ApiError(401,"Unauthorized");
         }
-        const decodedToken = await verifyAccessToken(token) as JwtPayload;
+        const decodedToken = await verifyAccessToken(token);
         req.user = decodedToken;
         next();
     } catch (err:any) {
