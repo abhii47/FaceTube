@@ -48,7 +48,14 @@ User.init({
     tableName:"users",
     timestamps:true,
     createdAt:"created_at",
-    updatedAt:false
+    updatedAt:false,
+    indexes:[
+        {
+            name:"email",
+            fields:["email"],
+            unique:true
+        }
+    ]
 })
 
 export default User;

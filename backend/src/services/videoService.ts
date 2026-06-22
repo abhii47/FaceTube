@@ -1,5 +1,6 @@
 import ApiError from "../utils/apiError.js";
-import { User, Video } from "../models/index.js";
+import { Subscription, User, Video } from "../models/index.js";
+import { Op } from "sequelize";
 
 type UploadVideoPayload = {
     userId:number,
@@ -11,6 +12,9 @@ type UploadVideoPayload = {
 type Pagination = {
     page:number,
     limit:number
+}
+type SubscriptionsPayload = Pagination & {
+    userId:number;
 }
 
 const uploadVideo = async(payload:UploadVideoPayload) => {
@@ -52,7 +56,53 @@ const getAllVideos = async(payload:Pagination) => {
     };
 }
 
+const getSubscribeVideos = async(payload:SubscriptionsPayload) => {
+    const {page,limit,userId} = payload;
+
+    const subscriptions = await Subscription.findAll({
+        where:{
+            subscriber_id:userId
+        },
+        attributes:["subscribed_to_id"]
+    });
+
+    const subscribedUserIds = subscriptions.map((s)=>s.subscribed_to_id);
+
+    if(subscribedUserIds.length === 0){
+        return{
+            totalVideos:0,
+            totalPages:0,
+            currentPage:page,
+            videos:[]
+        }
+    }
+
+    const {count,rows} = await Video.findAndCountAll({
+        where:{
+            user_id:{[Op.in]:subscribedUserIds}
+        },
+        limit,
+        offset:(page-1)*limit,
+        order:[['created_at','DESC']],
+        attributes:["video_id","user_id","title","video_url","thumbnail_url","view_count"],
+        include:[
+            {
+                model:User,
+                as:"uploader",
+                attributes:["username","avatar_url"],
+            }
+        ],
+    });
+    return {
+        totalVideos:count,
+        totalPages:Math.ceil(count/limit),
+        currentPage:page,
+        videos:rows
+    };
+}
+
 export default {
     uploadVideo,
-    getAllVideos
+    getAllVideos,
+    getSubscribeVideos
 }
