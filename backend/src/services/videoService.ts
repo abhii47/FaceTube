@@ -60,6 +60,15 @@ const getAllVideos = async(payload:Pagination) => {
     };
 }
 
+const getVideoById = async(videoId:number) => {
+    const video = await Video.findByPk(videoId,{attributes:["video_id","user_id","title","video_url","thumbnail_url","view_count"],include:{model:User,as:"uploader",attributes:["username","avatar_url"]}});
+    if(!video){
+        throw new ApiError(404,"Video not found");
+    }
+    await video.increment("view_count", { by:1 });
+    return video.toJSON();
+}
+
 const getSubscribeVideos = async(payload:SubscriptionsPayload) => {
     const {page,limit,userId} = payload;
 
@@ -121,6 +130,7 @@ const deleteVideo = async(payload:VideoIdPayload) => {
 export default {
     uploadVideo,
     getAllVideos,
+    getVideoById,
     getSubscribeVideos,
     deleteVideo
 }
