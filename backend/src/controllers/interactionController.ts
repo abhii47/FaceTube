@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import interactionService from "../services/InteractionService.js";
 import { apiResponse } from "../utils/apiResponse.js";
+import ApiError from "../utils/apiError.js";
 
 const toggleInteraction = async(
     req:Request,
@@ -10,6 +11,9 @@ const toggleInteraction = async(
     try {
         const userId = req.user!.id;
         const videoId = Number(req.params.videoId);
+        if(isNaN(videoId)){
+            throw new ApiError(400,"Invalid video id");
+        }
         const interactionType = req.body.interactionType as "like" | "dislike";
         const result = await interactionService.toggleInteraction({videoId,userId,interactionType});
         return apiResponse(res,200,`Interaction ${result.action} successfully`,result);

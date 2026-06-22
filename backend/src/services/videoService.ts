@@ -16,6 +16,10 @@ type Pagination = {
 type SubscriptionsPayload = Pagination & {
     userId:number;
 }
+type VideoIdPayload = {
+    videoId:number,
+    userId:number
+}
 
 const uploadVideo = async(payload:UploadVideoPayload) => {
     const {userId,video,title,description,thumbnail} = payload;
@@ -54,6 +58,15 @@ const getAllVideos = async(payload:Pagination) => {
         currentPage:page,
         videos:rows
     };
+}
+
+const getVideoById = async(videoId:number) => {
+    const video = await Video.findByPk(videoId,{attributes:["video_id","user_id","title","video_url","thumbnail_url","view_count"],include:{model:User,as:"uploader",attributes:["username","avatar_url"]}});
+    if(!video){
+        throw new ApiError(404,"Video not found");
+    }
+    await video.increment("view_count", { by:1 });
+    return video.toJSON();
 }
 
 const getSubscribeVideos = async(payload:SubscriptionsPayload) => {
@@ -101,8 +114,23 @@ const getSubscribeVideos = async(payload:SubscriptionsPayload) => {
     };
 }
 
+const deleteVideo = async(payload:VideoIdPayload) => {
+    const {videoId,userId} = payload;
+    const video = await Video.findByPk(videoId);
+    if(!video){
+        throw new ApiError(404,"Video not found");
+    }
+    if(video.user_id !== userId){
+        throw new ApiError(403,"You are not authorized to delete this video");
+    }
+    await video.destroy();
+    return {action:"deleted"};
+}
+
 export default {
     uploadVideo,
     getAllVideos,
-    getSubscribeVideos
+    getVideoById,
+    getSubscribeVideos,
+    deleteVideo
 }
