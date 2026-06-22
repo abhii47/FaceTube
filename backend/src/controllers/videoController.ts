@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import videoService from "../services/videoService.js";
 import { apiResponse } from "../utils/apiResponse.js";
+import ApiError from "../utils/apiError.js";
 
 const uploadVideo = async(
     req:Request,
@@ -50,8 +51,27 @@ const getSubscribeVideos = async(
     }
 }
 
+const deleteVideo = async(
+    req:Request,
+    res:Response,
+    next:NextFunction
+) => {
+    try {
+        const videoId = Number(req.params.videoId);
+        if(isNaN(videoId)){
+            throw new ApiError(400,"Invalid video id");
+        }
+        const userId = req.user!.id;
+        const result = await videoService.deleteVideo({videoId,userId});
+        return apiResponse(res,200,"Video deleted successfully",result);
+    } catch (err:any) {
+        next(err);
+    }
+}
+
 export default {
     uploadVideo,
     getAllVideos,
-    getSubscribeVideos
+    getSubscribeVideos,
+    deleteVideo
 };
