@@ -17,9 +17,10 @@ router.post('/upload',
 );
 router.get('/',auth,videoController.getAllVideos);
 router.get('/subscribed-videos',auth,videoController.getSubscribeVideos);
+router.delete('/comment/:commentId',auth,commentController.deleteComment);
+router.delete('/:videoId',auth,videoController.deleteVideo);
 router.post('/:videoId/interact',auth,interactionController.toggleInteraction); 
 router.post('/:videoId/comment',auth,commentController.addComment);
 router.get('/:videoId/comment',auth,commentController.commentsOnVideo);
-router.delete('/comment/:commentId',auth,commentController.deleteComment);
 
 export default router;
