@@ -1,6 +1,7 @@
 import Subscription from "./subscription.js";
 import User from "./user.js";
 import Video from "./video.js";
+import VideoInteraction from "./videoInteraction.js";
 
 Video.belongsTo(User, {
     foreignKey: 'user_id',
@@ -38,8 +39,31 @@ Subscription.belongsTo(User,{
     as:"subscribedTo"
 });
 
+VideoInteraction.belongsTo(Video,{
+    foreignKey:"video_id",
+    as:"video",
+    onDelete:"CASCADE"
+});
+
+VideoInteraction.belongsTo(User,{
+    foreignKey:"user_id",
+    as:"user",
+    onDelete:"CASCADE"
+});
+
+Video.hasMany(VideoInteraction,{
+    foreignKey:"video_id",
+    as:"interactions"
+});
+
+User.hasMany(VideoInteraction,{
+    foreignKey:"user_id",
+    as:"interacted_videos"
+});
+
 export { 
     User,
     Video,
-    Subscription
+    Subscription,
+    VideoInteraction
 }
