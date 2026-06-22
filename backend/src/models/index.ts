@@ -1,3 +1,4 @@
+import Comment from "./comment.js";
 import Subscription from "./subscription.js";
 import User from "./user.js";
 import Video from "./video.js";
@@ -61,9 +62,32 @@ User.hasMany(VideoInteraction,{
     as:"interacted_videos"
 });
 
+Comment.belongsTo(Video,{
+    foreignKey:"video_id",
+    as:"video",
+    onDelete:"CASCADE"
+});
+
+Comment.belongsTo(User,{
+    foreignKey:"user_id",
+    as:"user",
+    onDelete:"CASCADE"
+});
+
+User.hasMany(Comment,{
+    foreignKey:"user_id",
+    as:"comments"
+});
+
+Video.hasMany(Comment,{
+    foreignKey:"video_id",
+    as:"comments"
+});
+
 export { 
     User,
     Video,
     Subscription,
-    VideoInteraction
+    VideoInteraction,
+    Comment
 }
