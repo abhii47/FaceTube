@@ -13,5 +13,7 @@ router.post('/upload',
     ]),
     videoController.uploadVideo
 );
+router.get('/',auth,videoController.getAllVideos);
+router.get('/subscribed-videos',auth,videoController.getSubscribeVideos);
 
 export default router;

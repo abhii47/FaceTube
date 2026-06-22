@@ -19,6 +19,39 @@ const uploadVideo = async(
     }
 }
 
+const getAllVideos = async(
+    req:Request,
+    res:Response,
+    next:NextFunction
+) => {
+    try {
+        const page = Math.max(1, Number(req.query.page) || 1);
+        const limit = Math.min(50, Math.max(1, Number(req.query.limit) || 10));
+        const result = await videoService.getAllVideos({page,limit});
+        return apiResponse(res,200,"All Videos Fetched Successfully",result);
+    } catch (err:any) {
+        next(err);
+    }
+}
+
+const getSubscribeVideos = async(
+    req:Request,
+    res:Response,
+    next:NextFunction
+) => {
+    try {
+        const page = Math.max(1, Number(req.query.page) || 1);
+        const limit = Math.min(50, Math.max(1, Number(req.query.limit) || 10));
+        const userId = req.user!.id;
+        const result = await videoService.getSubscribeVideos({page,limit,userId});
+        return apiResponse(res,200,"Subscribed Videos Fetched Successfully",result);
+    } catch (err:any) {
+        next(err);
+    }
+}
+
 export default {
-    uploadVideo
+    uploadVideo,
+    getAllVideos,
+    getSubscribeVideos
 };
