@@ -1,0 +1,62 @@
+import { Link, useLocation } from "react-router-dom";
+import {
+House,
+Video,
+User,
+Upload
+} from "lucide-react";
+
+export const Sidebar = () => {
+const location = useLocation();
+const menuItems = [
+    {
+        name: "Home",
+        icon: House,
+        path: "/home"
+    },
+    {
+        name: "Videos",
+        icon: Video,
+        path: "/videos"
+    },
+    {
+        name: "Upload",
+        icon: Upload,
+        path: "/upload"
+    },
+    {
+        name: "Profile",
+        icon: User,
+        path: "/profile"
+    }
+];
+
+return (
+    <aside className="w-64 bg-[#111827] border-r border-[#2A3B4A]">
+
+        <div className="flex flex-col p-4 gap-2">
+            {menuItems.map((item) => {
+                const Icon = item.icon;
+
+                return (
+                    <Link
+                        key={item.name}
+                        to={item.path}
+                        className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors
+                            ${
+                                location.pathname === item.path
+                                    ? "bg-[#077A7D] text-white"
+                                    : "text-gray-300 hover:bg-[#183D3D]"
+                            }
+                        `}
+                    >
+                        <Icon size={20} />
+                        <span>{item.name}</span>
+                    </Link>
+                );
+            })}
+
+        </div>
+
+    </aside>
+)};
