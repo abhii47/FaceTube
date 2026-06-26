@@ -52,6 +52,20 @@ const getVideoById = async(
     }
 }
 
+const getMyVideos = async(
+    req:Request,
+    res:Response,
+    next:NextFunction
+) => {
+    try {
+        const userId = req.user!.id;
+        const result = await videoService.getMyVideos(userId);
+        return apiResponse(res,200,"My Videos Fetched Successfully",result);
+    } catch (err:any) {
+        next(err);
+    }
+}
+
 const getSubscribeVideos = async(
     req:Request,
     res:Response,
@@ -90,6 +104,7 @@ export default {
     uploadVideo,
     getAllVideos,
     getVideoById,
+    getMyVideos,
     getSubscribeVideos,
     deleteVideo
 };

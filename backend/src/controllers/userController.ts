@@ -55,6 +55,20 @@ const refreshAccessTokenController = async(
     }
 }
 
+const getCurrentUser = async(
+    req:Request,
+    res:Response,
+    next:NextFunction
+) => {
+    try {
+        const userId = req.user!.id;
+        const result = await userSerivce.getCurrentUser(userId);
+        return apiResponse(res,200,"Current User",result);
+    } catch (err:any) {
+        next(err);
+    }
+}
+
 const logoutController = async(
     req:Request,
     res:Response,
@@ -74,5 +88,6 @@ export default {
     registerController,
     loginController,
     refreshAccessTokenController,
-    logoutController
+    logoutController,
+    getCurrentUser,
 }

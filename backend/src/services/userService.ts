@@ -92,9 +92,19 @@ const logoutUser = async(userId:number) => {
     return "User Already Logged Out";
 }
 
+const getCurrentUser = async(userId:number) => {
+    const user = await User.findByPk(userId);
+    if(!user){
+        throw new ApiError(404,"User Not Found");
+    }
+    const { password:_, refresh_token:__, ...safeUser } = user.toJSON();
+    return safeUser;
+}
+
 export default {
     registerUser,
     loginUser,
     refreshAccessToken,
-    logoutUser
+    logoutUser,
+    getCurrentUser
 }

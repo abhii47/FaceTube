@@ -5,6 +5,8 @@ import Home from './pages/Home'
 import { Register } from './pages/Register'
 import { Feed } from './components/layout/Feed'
 import { Profile } from './pages/Profile'
+import Watch from './pages/Watch'
+import MyVideo from './components/layout/Video'
 
 function App() {
 
@@ -12,13 +14,23 @@ function App() {
     <>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/register" element={<Register />}>
+        
+        {/* Nested Routing for Home */}
+        <Route path="/home" element={<Home />}>
+          {/* Default feed when visiting /home */}
           <Route index element={<Feed />} />
-          {/* <Route path="video" element={<VideoPlayer />} /> */}
+          {/* Nested routes will render in the Outlet inside Home */}
+          <Route path="profile" element={<Profile />} />
+          {/* Add other child routes here when ready */}
+          <Route path="videos" element={<MyVideo />} />
           {/* <Route path="upload" element={<UploadVideo />} /> */}
-          <Route path='profile' element={<Profile />} />
         </Route>
+        
+        <Route path="/register" element={<Register />} />
+        <Route path="/watch/:videoId" element={<Watch />} />
+        
+        {/* Redirect root path to home */}
+        <Route index element={<Navigate to="/home" />} />
       </Routes>
     </>
   )
