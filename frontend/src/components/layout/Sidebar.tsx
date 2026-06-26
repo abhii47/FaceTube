@@ -1,17 +1,17 @@
 import { Link, useLocation } from "react-router-dom";
 import {
-House,
 Video,
 User,
-Upload
+Upload,
+StepForward
 } from "lucide-react";
 
 export const Sidebar = () => {
 const location = useLocation();
 const menuItems = [
     {
-        name: "Home",
-        icon: House,
+        name: "Feed",
+        icon: StepForward,
         path: "/home"
     },
     {

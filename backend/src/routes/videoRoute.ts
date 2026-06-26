@@ -17,6 +17,7 @@ router.post('/upload',
 );
 router.get('/',auth,videoController.getAllVideos);
 router.get('/subscribed-videos',auth,videoController.getSubscribeVideos);
+router.get('/my-videos',auth,videoController.getMyVideos);
 router.delete('/comment/:commentId',auth,commentController.deleteComment);
 router.get('/:videoId',auth,videoController.getVideoById);
 router.delete('/:videoId',auth,videoController.deleteVideo);

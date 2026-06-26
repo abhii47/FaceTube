@@ -10,5 +10,6 @@ router.post("/login",userController.loginController);
 router.post("/refresh",userController.refreshAccessTokenController);
 router.post("/logout",auth,userController.logoutController);
 router.post("/:userId/subscribe",auth,subscriptionController.subscribeOrUnsubscribeUser);
+router.get("/me",auth,userController.getCurrentUser);
 
 export default router;

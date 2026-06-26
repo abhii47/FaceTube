@@ -1,22 +1,27 @@
 import { useState } from "react";
 import { Eye } from "lucide-react";
 import type { Video } from "../../types";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
     video: Video;
 };
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
-console.log("Backend URL:", backendUrl);
 
 export const VideoCard = ({ video }: Props) => {
     const [isHovered, setIsHovered] = useState<boolean>(false);
+    const navigate = useNavigate();
+    const handleVideoClick = () => {
+        navigate(`/watch/${video.video_id}`);
+    }
 
     return (
         <div
             className="bg-[#183D3D]/40 hover:bg-[#183D3D]/60 rounded-xl overflow-hidden pb-4 flex flex-col gap-3 cursor-pointer group transition-colors"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
+            onClick={handleVideoClick}
         >
             {/* Thumbnail / Video Area */}
             <div className="relative w-full aspect-video overflow-hidden">
@@ -43,9 +48,8 @@ export const VideoCard = ({ video }: Props) => {
                 <img
                     src={
                         video.uploader.avatar_url ??
-                        "https://placehold.co/40"
+                        "https://placehold.co/40X40/183D3D/FFFFFF?text=U"
                     }
-                    alt={video.uploader.username}
                     className="w-9 h-9 rounded-full mt-0.5 object-cover flex-shrink-0"
                 />
 
@@ -53,10 +57,13 @@ export const VideoCard = ({ video }: Props) => {
                     <h3 className="text-[#F1F1F1] text-base font-semibold line-clamp-2 leading-tight mb-1">
                         {video.title}
                     </h3>
+                    {/* <button className="text-[#AAAAAA] text-sm flex items-center gap-1">
+                        <PlayCircle size={20} color="beige" />
+                    </button> */}
 
                     <div className="flex items-center gap-2 justify-between">
                         <p className="text-[#AAAAAA] text-sm hover:text-white transition-colors">
-                            {video.uploader.username}
+                            {video.uploader.username ?? "Unknown" }
                         </p>
 
                         <p className="text-[#AAAAAA] text-sm flex items-center gap-1">

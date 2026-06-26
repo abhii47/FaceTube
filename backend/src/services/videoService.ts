@@ -69,6 +69,21 @@ const getVideoById = async(videoId:number) => {
     return video.toJSON();
 }
 
+const getMyVideos = async(userId:number) => {
+    const videos = await Video.findAll({
+        where:{
+            user_id:userId
+        },
+        attributes:["video_id","user_id","title","video_url","thumbnail_url","view_count"],
+        include:{
+            model:User,
+            as:"uploader",
+            attributes:["username","avatar_url"],
+        },
+    });
+    return videos.map((v) => v.toJSON());
+}
+
 const getSubscribeVideos = async(payload:SubscriptionsPayload) => {
     const {page,limit,userId} = payload;
 
@@ -131,6 +146,7 @@ export default {
     uploadVideo,
     getAllVideos,
     getVideoById,
+    getMyVideos,
     getSubscribeVideos,
     deleteVideo
 }

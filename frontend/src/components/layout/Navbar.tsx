@@ -1,6 +1,9 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 export const Navbar = () => {
+    const navigate = useNavigate();
+    const {user} = useAuth();
 return ( 
     <nav className="h-16 bg-[#0F1720] border-b border-[#2A3B4A] flex items-center justify-between px-6">
 
@@ -25,12 +28,13 @@ return (
 
             <button
                 className="bg-[#077A7D] hover:bg-[#06686A] text-white px-4 py-2 rounded-lg transition-colors"
+                onClick={() => navigate("/upload")}
             >
                 Upload
             </button>
 
             <div className="w-10 h-10 rounded-full bg-[#077A7D] flex items-center justify-center text-white font-semibold">
-                A
+                {user?.username?.slice(0,1).toUpperCase() ?? "?"}
             </div>
 
         </div>

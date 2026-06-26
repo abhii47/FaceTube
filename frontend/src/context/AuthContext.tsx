@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import type { LoginData, User } from "../types";
 import axiosInstance from "../api/axiosInstance";
 
@@ -15,6 +15,23 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider = ({children}:{children:React.ReactNode}) => {
     const [user, setUser] = useState<User | null>(null);
     const [accessToken, setAccessToken] = useState<string | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+
+    useEffect(() => {
+        const restoreUser = async() => {
+            const token = localStorage.getItem("accessToken");
+            if(token){
+                try {
+                    const response = await axiosInstance.get("/users/me");
+                    setUser(response.data.data);
+                } catch{
+                    localStorage.removeItem("accessToken");
+                }
+            }
+            setLoading(false);
+        }
+        restoreUser();
+    },[]);
 
     const isAuthenticated = user !== null;
     
@@ -40,6 +57,10 @@ export const AuthProvider = ({children}:{children:React.ReactNode}) => {
             console.error("Error logging out:",error);
             throw error;
         }
+    }
+
+    if(loading){
+        return null;
     }
     return(
         <AuthContext.Provider value={{user,accessToken,isAuthenticated,login,logout}}>
