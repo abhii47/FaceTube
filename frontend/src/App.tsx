@@ -4,9 +4,10 @@ import { Login } from './pages/Login'
 import Home from './pages/Home'
 import { Register } from './pages/Register'
 import { Feed } from './components/layout/Feed'
-import { Profile } from './pages/Profile'
+import { Profile } from './components/layout/Profile'
 import Watch from './pages/Watch'
 import MyVideo from './components/layout/Video'
+import UploadVideo from './components/form/Upload'
 
 function App() {
 
@@ -19,11 +20,10 @@ function App() {
         <Route path="/home" element={<Home />}>
           {/* Default feed when visiting /home */}
           <Route index element={<Feed />} />
-          {/* Nested routes will render in the Outlet inside Home */}
-          <Route path="profile" element={<Profile />} />
           {/* Add other child routes here when ready */}
           <Route path="videos" element={<MyVideo />} />
-          {/* <Route path="upload" element={<UploadVideo />} /> */}
+          <Route path="profile" element={<Profile />} />
+          <Route path="upload" element={<UploadVideo />} />
         </Route>
         
         <Route path="/register" element={<Register />} />
@@ -36,4 +36,4 @@ function App() {
   )
 }
 
-export default App
+export default App;

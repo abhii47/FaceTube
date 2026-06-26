@@ -45,7 +45,7 @@ const getAllVideos = async(payload:Pagination) => {
         limit,
         offset:(page-1)*limit,
         order:[['created_at','DESC']],
-        attributes:["video_id","user_id","title","video_url","thumbnail_url","view_count"],
+        attributes:["video_id","user_id","title","description","video_url","thumbnail_url","view_count"],
         include:{
             model:User,
             as:"uploader",
@@ -61,7 +61,7 @@ const getAllVideos = async(payload:Pagination) => {
 }
 
 const getVideoById = async(videoId:number) => {
-    const video = await Video.findByPk(videoId,{attributes:["video_id","user_id","title","video_url","thumbnail_url","view_count"],include:{model:User,as:"uploader",attributes:["username","avatar_url"]}});
+    const video = await Video.findByPk(videoId,{attributes:["video_id","user_id","title","description","video_url","thumbnail_url","view_count"],include:{model:User,as:"uploader",attributes:["username","avatar_url"]}});
     if(!video){
         throw new ApiError(404,"Video not found");
     }
@@ -74,7 +74,7 @@ const getMyVideos = async(userId:number) => {
         where:{
             user_id:userId
         },
-        attributes:["video_id","user_id","title","video_url","thumbnail_url","view_count"],
+        attributes:["video_id","user_id","title","description","video_url","thumbnail_url","view_count"],
         include:{
             model:User,
             as:"uploader",

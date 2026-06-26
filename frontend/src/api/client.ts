@@ -20,3 +20,17 @@ export const fetchMyVideos = async() => {
     const res = await axiosInstance.get("/videos/my-videos");
     return res.data.data;
 }
+
+export const uploadVideo = async(formData:FormData):Promise<Video> => {
+    const res = await axiosInstance.post("/videos/upload",formData,{
+        headers:{
+            "Content-Type": "multipart/form-data"
+        }
+    });
+    return res.data.data;
+}
+
+export const deleteMyVideo = async(videoId:number):Promise<boolean> => {
+    const res = await axiosInstance.delete(`/videos/${videoId}`);
+    return res.data.action === "deleted";
+}

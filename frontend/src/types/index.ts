@@ -26,6 +26,7 @@ export type Video = {
     video_id:number;
     user_id:number;
     title:string;
+    description:string;
     video_url:string;
     thumbnail_url:string;
     view_count:number;
